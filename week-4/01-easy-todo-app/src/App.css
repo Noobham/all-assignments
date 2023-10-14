@@ -1,0 +1,14 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.todo_form{
+    width: 16%;
+}
+.mb-2{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}

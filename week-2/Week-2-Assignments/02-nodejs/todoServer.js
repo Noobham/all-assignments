@@ -44,6 +44,67 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+const cors = require("cors");
+
+app.use(cors());
 app.use(bodyParser.json());
 
-module.exports = app;
+let todos=[];
+
+app.get("/todos",(req,res)=>{
+  res.status(200).json(todos);
+})
+
+app.get("/todos/:id",(req,res)=>{
+  let todo={};
+  for(let t in todos){
+    if(todos[t].id == req.params.id){
+      todo = (todos[t]);
+      res.status(200).json(todo);
+    }
+  }
+  res.status(404).send();
+})
+
+app.delete("/todos/:id",(req,res)=>{
+  let todo=[];
+  for(let t in todos){
+    console.log(todos[t]);
+    if(todos[t].id != req.params.id){
+      todo.push(todos[t]);
+    }
+  }
+  if(todo.length==todos.length){
+    res.status(404).send();
+  }
+  todos = todo;
+  res.status(200).send();
+})
+
+app.put("/todos/:id",(req,res)=>{
+  let todo={};
+  for(let t in todos){
+    if(todos[t].id == req.params.id){
+      todos[t]= {
+        "id":req.params.id,
+        "title":req.body.title,
+        "completed":req.body.completed,
+        "description":todos[t].description
+      }
+      res.status(200).send();
+    }
+ }
+
+  return res.status(404).send();
+})
+
+app.post("/todos",(req,res)=>{
+  var {title,description,completed} = req.body;
+  const id = todos.length+1;
+  todos.push({"id":id,"title":title,"description":description});
+  res.status(201).json({"id":id,"title":title,"description":description});
+})
+
+app.listen(4000,()=>{
+console.log("server is running on PORT- 3000");
+})
