@@ -1,8 +1,9 @@
-const jwt = require('jsonwebtoken');
-const { Response } = require('express');
+import jwt from 'jsonwebtoken'
 const SECRET = 'SECr3t';  // This should be in an environment variable in a real application
 
-const authenticateJwt = (req, res, next) => {
+import { Request , Response , NextFunction } from 'express';
+
+const authenticateJwt = (req :Request, res :Response, next :NextFunction) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(' ')[1];
@@ -10,7 +11,10 @@ const authenticateJwt = (req, res, next) => {
       if (err) {
         return res.sendStatus(403);
       }
-      req.userId = user.id;
+      if(!user || typeof user == "string"){
+        return res.status(402);
+      }
+      req.headers['userId'] = user.id;
       next();
     });
   } else {
@@ -18,7 +22,7 @@ const authenticateJwt = (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
     authenticateJwt,
     SECRET
 }
